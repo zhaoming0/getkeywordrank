@@ -54,8 +54,9 @@ totalPages = int(totalKeyWord/len(tbody))
 
 lineText = {}
 
+# totalPages = 0
 for num in range(1, totalPages+2):
-    print('total page is :', totalPages, 'now pages is :', num)
+    print('total page is :', str(totalPages+1), 'now pages is :', num)
     tbody = driver.find_elements_by_xpath('//*[@id="w3"]/table/tbody/tr')
     for i in range(1, len(tbody) +1):
         caseResult = []
@@ -65,23 +66,24 @@ for num in range(1, totalPages+2):
             if (j == 7):
                 xpathText = re.sub('\D', '', xpathText)
             if (j == 9):
-                A = 0;
-                S = 0;
-                O = 0;
-                if ('A' in xpathText):
-                    A = 1
-                if ('S' in xpathText):
-                    S = 1
-                if ('O' in xpathText):
-                    O = 1
+                A = 1 if ('A' in xpathText) else 0
+                S = 1 if ('S' in xpathText) else 0
+                O = 1 if ('O' in xpathText) else 0
                 caseResult.append(A)
                 caseResult.append(S)
                 caseResult.append(O)
+            if (j == 3):
+                if ("Amazon's Choice" in xpathText):
+                    xpathText = xpathText.replace("\nAmazon's Choice", '')
+                    caseResult.append("Amazon's Choice")
+                else:
+                    caseResult.append('')
             caseResult.append(xpathText)
+        caseResult.pop(1)
         lineText[caseResult[0]] = caseResult
     if num <= totalPages:
-        # driver.find_element_by_xpath('//*[@id="w3"]/ul/li[12]/a').click()
         # next pages
+        time.sleep(3)
         driver.find_element_by_partial_link_text('»').click()
         time.sleep(5)
 
