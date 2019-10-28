@@ -3,10 +3,9 @@ from selenium import webdriver
 import time
 import csv
 import re
-import io
 import datetime
-now = datetime.datetime.now().strftime('%Y%m%d%H%M%S')
-ASIN = 'B07M5W81V6'
+nowTime = datetime.datetime.now().strftime('%Y%m%d%H%M%S')
+ASIN = 'B07MPB1N5G'
 
 chrome_option = webdriver.ChromeOptions()
 # chrome_option.add_argument('--headless')
@@ -54,6 +53,8 @@ for num in range(1, totalPages+2):
         for j in range(1, len(tdnumber) +1):
             xPATH = '//*[@id="w3"]/table/tbody/tr' + '[' + str(i) + ']' + '/td' + '[' + str(j) + ']'
             xpathText = str(driver.find_element_by_xpath(xPATH).text)
+            if (j == 7):
+                xpathText = re.sub('\D', '', xpathText)
             if (j == 9):
                 A = 0;
                 S = 0;
@@ -74,11 +75,12 @@ for num in range(1, totalPages+2):
         #//*[@id="w3"]/ul/li[12]/a
         time.sleep(5)
 
-outputFile = now + '-' + ASIN + '.csv'
-with open(outputFile, 'w', newline='') as csv_file:
+outputFile = ASIN + '-total-' + str(len(lineText)) + nowTime + '.csv'
+with open(outputFile, 'w', encoding='utf-8', newline='') as csv_file:
     writer = csv.writer(csv_file)
     for values in lineText.values():
         writer.writerow(values)
 
-print(len(lineText))
+print(len(lineText));
+print(outputFile);
 driver.quit()
