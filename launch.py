@@ -6,7 +6,7 @@ import re
 import io
 import datetime
 now = datetime.datetime.now().strftime('%Y%m%d%H%M%S')
-ASIN = 'B07VD3G537'
+ASIN = 'B07M5W81V6'
 
 chrome_option = webdriver.ChromeOptions()
 # chrome_option.add_argument('--headless')
