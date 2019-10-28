@@ -72,10 +72,9 @@ for num in range(1, totalPages+2):
         lineText[caseResult[0]] = caseResult
     if num <= totalPages:
         driver.find_element_by_xpath('//*[@id="w3"]/ul/li[12]/a').click()
-        #//*[@id="w3"]/ul/li[12]/a
         time.sleep(5)
 
-outputFile = ASIN + '-total-' + str(len(lineText)) + nowTime + '.csv'
+outputFile = ASIN + '-total-' + str(len(lineText)) + '-' + nowTime + '.csv'
 with open(outputFile, 'w', encoding='utf-8', newline='') as csv_file:
     writer = csv.writer(csv_file)
     for values in lineText.values():
