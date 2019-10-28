@@ -5,7 +5,7 @@ import csv
 import re
 import datetime
 nowTime = datetime.datetime.now().strftime('%Y%m%d%H%M%S')
-ASIN = 'B07MPB1N5G'
+ASIN = 'B07WDF1YPL'
 
 chrome_option = webdriver.ChromeOptions()
 # chrome_option.add_argument('--headless')
@@ -29,8 +29,17 @@ driver.find_element_by_xpath('//*[@id="search-form"]/a[1]').click()
 time.sleep(5)
 
 #alert
-driver.find_element_by_xpath('/html/body/div[17]/div[7]').click()
-time.sleep(5)
+flags = False
+try:
+    driver.find_element_by_xpath('/html/body/div[17]/div[7]/button')
+    flags = True
+except:
+    flags = False
+if(flags):
+    driver.find_element_by_xpath('/html/body/div[17]/div[7]/button').click()
+    time.sleep(10)
+else:
+    time.sleep(15)
 
 #get total number key word
 totalKeyWord = driver.find_element_by_xpath('//*[@id="cerebroPjax"]/div[2]/div/div/div/div/div/div[1]/div[1]/div/span').text
