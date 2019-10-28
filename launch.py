@@ -71,7 +71,9 @@ for num in range(1, totalPages+2):
             caseResult.append(xpathText)
         lineText[caseResult[0]] = caseResult
     if num <= totalPages:
-        driver.find_element_by_xpath('//*[@id="w3"]/ul/li[12]/a').click()
+        # driver.find_element_by_xpath('//*[@id="w3"]/ul/li[12]/a').click()
+        # next pages
+        driver.find_element_by_partial_link_text('»').click()
         time.sleep(5)
 
 outputFile = ASIN + '-total-' + str(len(lineText)) + '-' + nowTime + '.csv'
