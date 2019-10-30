@@ -1,11 +1,13 @@
 #-*-coding: utf-8 -*-
 from selenium import webdriver
+from selenium.webdriver.support.ui import Select
 import time
 import csv
 import re
 import datetime
 nowTime = datetime.datetime.now().strftime('%Y%m%d%H%M%S')
 ASIN = 'B07WDF1YPL'
+#B07RK4Y4MQ
 
 chrome_option = webdriver.ChromeOptions()
 # chrome_option.add_argument('--headless')
@@ -43,20 +45,30 @@ else:
 
 #get total number key word
 totalKeyWord = driver.find_element_by_xpath('//*[@id="cerebroPjax"]/div[2]/div/div/div/div/div/div[1]/div[1]/div/span').text
-
 totalKeyWord = int(re.sub('\D', '', totalKeyWord))
 
 
 # tbody pages
-tbody = driver.find_elements_by_xpath('//*[@id="w3"]/table/tbody/tr')
 tdnumber = driver.find_elements_by_xpath('//*[@id="w3"]/table/tbody/tr[1]/td')
-totalPages = int(totalKeyWord/len(tbody))
+#12
+
+Select(driver.find_element_by_xpath('//*[@id="w3"]/select')).select_by_value('150')
+tbody = 150
+time.sleep(10)
+
+
+
+if (int(totalKeyWord) % (tbody) ==0):
+    totalPages = int(totalKeyWord/(tbody)) + 1
+else:
+    totalPages = int(totalKeyWord/(tbody)) + 2
 
 lineText = {}
 
 # totalPages = 0
-for num in range(1, totalPages+2):
-    print('total page is :', str(totalPages+1), 'now pages is :', num)
+for num in range(1, totalPages):
+    print('total page is :', str(totalPages-1), 'now pages is :', num)
+    print(datetime.datetime.now().strftime('%Y%m%d-%H-%M-%S'))
     tbody = driver.find_elements_by_xpath('//*[@id="w3"]/table/tbody/tr')
     for i in range(1, len(tbody) +1):
         caseResult = []
@@ -81,15 +93,38 @@ for num in range(1, totalPages+2):
             caseResult.append(xpathText)
         caseResult.pop(1)
         lineText[caseResult[0]] = caseResult
-    if num <= totalPages:
-        # next pages
+    # change pages
+    try:
+        driver.find_element_by_partial_link_text('»')
+        Flags = True
+    except:
+        Flags = False
+    if Flags:
         time.sleep(3)
-        driver.find_element_by_partial_link_text('»').click()
+        driver.find_element_by_partial_link_text('»').click();
         time.sleep(5)
+    else:
+        break
+
+#generate headlist
+headerList = []
+for num in range(1, len(tdnumber)+1):
+    xpath = '//*[@id="w3"]/div/table/thead/tr' + '/th[' + str(num) +']'
+    xpathText = driver.find_element_by_xpath(xpath).text
+    if (num == 2):
+        headerList.append('Amazon Choise')
+    elif(num == 9):
+        headerList.append('Amazon Recommended')
+        headerList.append('Sponsored')
+        headerList.append('Organic')
+        headerList.append(xpathText)
+    else:
+        headerList.append(xpathText)
 
 outputFile = ASIN + '-total-' + str(len(lineText)) + '-' + nowTime + '.csv'
 with open(outputFile, 'w', encoding='utf-8', newline='') as csv_file:
     writer = csv.writer(csv_file)
+    writer.writerow(headerList)
     for values in lineText.values():
         writer.writerow(values)
 
