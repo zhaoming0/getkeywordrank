@@ -4,10 +4,15 @@ from selenium.webdriver.support.ui import Select
 import time
 import csv
 import re
+import sys
 import datetime
 nowTime = datetime.datetime.now().strftime('%Y%m%d%H%M%S')
-ASIN = 'B07WDF1YPL'
-#B07RK4Y4MQ
+#                                  
+#                 
+ASIN = 'B006INROOI'
+
+if (len(sys.argv) > 1):
+    ASIN = sys.argv[1]
 
 chrome_option = webdriver.ChromeOptions()
 # chrome_option.add_argument('--headless')
@@ -52,9 +57,13 @@ totalKeyWord = int(re.sub('\D', '', totalKeyWord))
 tdnumber = driver.find_elements_by_xpath('//*[@id="w3"]/table/tbody/tr[1]/td')
 #12
 
-Select(driver.find_element_by_xpath('//*[@id="w3"]/select')).select_by_value('150')
-tbody = 150
-time.sleep(10)
+try:
+    Select(driver.find_element_by_xpath('//*[@id="w3"]/select')).select_by_value('150')
+    tbody = 150
+    time.sleep(10)
+except:
+    tbody = 50
+    time.sleep(5)
 
 
 

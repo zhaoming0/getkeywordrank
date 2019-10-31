@@ -5,8 +5,12 @@ import time
 import csv
 import re
 import datetime
-
-ASIN = 'B07WDF1YPL'
+import sys
+if(len(sys.argv) > 1):
+    ASIN = sys.argv[1]
+else:
+    ASIN = 'B07WDF1YPL'
+print (ASIN, 'asin')
 driver = webdriver.Chrome()
 driver.get('https://members.helium10.com/cerebro')
 
